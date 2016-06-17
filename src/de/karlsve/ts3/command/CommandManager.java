@@ -16,7 +16,7 @@ public class CommandManager {
 		this.init();
 	}
 	
-	synchronized public List<Command> getCommands() {
+	public List<Command> getCommands() {
 		return this.commands;
 	}
 
@@ -36,6 +36,11 @@ public class CommandManager {
 	public void registerCommand(Command command) {
 		this.handle.getEventManager().addMessageListener(command);
 		this.getCommands().add(command);
+	}
+
+	public void unregisterCommand(Command command) {
+		this.handle.getEventManager().removeMessageListener(command);
+		this.getCommands().remove(command);
 	}
 
 }

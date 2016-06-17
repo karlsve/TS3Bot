@@ -1,8 +1,7 @@
 package de.karlsve.ts3.events;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Vector;
 
 import de.karlsve.ts3.Log;
 import de.karlsve.ts3.ServerBot;
@@ -18,8 +17,8 @@ public class EventManager implements TeamspeakActionListener {
 	public static final String NOTIFY_ENTER = "notifycliententerview";
 	public static final String NOTIFY_LEFT = "notifyclientleftview";
 	
-	private List<MessageListener> messageListener = new ArrayList<>();
-	private List<ClientListener> clientListener = new ArrayList<>();
+	private Vector<MessageListener> messageListener = new Vector<>();
+	private Vector<ClientListener> clientListener = new Vector<>();
 
 	public EventManager(ServerBot handle) {
 		this.handle = handle;
@@ -46,20 +45,20 @@ public class EventManager implements TeamspeakActionListener {
 		}
 	}
 	
-	synchronized public List<MessageListener> getMessageListener() {
-		return this.messageListener;
-	}
-	
 	public void addMessageListener(MessageListener listener) {
-		this.getMessageListener().add(listener);
+		this.messageListener.add(listener);
 	}
-	
-	synchronized public List<ClientListener> getClientListener() {
-		return this.clientListener;
+
+	public void removeMessageListener(MessageListener listener) {
+		this.messageListener.remove(listener);
 	}
 	
 	public void addClientListener(ClientListener listener) {
-		this.getClientListener().add(listener);
+		this.clientListener.add(listener);
+	}
+
+	public void removeClientListener(ClientListener listener) {
+		this.clientListener.remove(listener);
 	}
 
 	@Override
@@ -82,13 +81,13 @@ public class EventManager implements TeamspeakActionListener {
 	}
 
 	private void triggerClientEvent(ClientEvent clientEvent) {
-		for(ClientListener listener : this.getClientListener()) {
+		for(ClientListener listener : this.clientListener) {
 			listener.onTrigger(clientEvent);
 		}
 	}
 
 	private void triggerMessageEvent(MessageEvent event) {
-		for(MessageListener listener : this.getMessageListener()) {
+		for(MessageListener listener : this.messageListener) {
 			if(listener.getTargetMode() == event.getTargetMode()) {
 				if(event.isReceived()) {
 					listener.onMessageReceived(event);
