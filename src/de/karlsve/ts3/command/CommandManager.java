@@ -6,12 +6,12 @@ import java.util.List;
 import de.karlsve.ts3.Log;
 import de.karlsve.ts3.ServerBot;
 
-public class CommandService {
+public class CommandManager {
 	
 	private ServerBot handle = null;
 	private List<Command> commands = new ArrayList<Command>();
 
-	public CommandService(ServerBot handle) {
+	public CommandManager(ServerBot handle) {
 		this.handle = handle;
 		this.init();
 	}

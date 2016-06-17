@@ -18,5 +18,11 @@ public abstract class Log {
 		Date current = Calendar.getInstance().getTime();
 		System.out.printf("%s: ERROR %s%n", format.format(current), e.getMessage());
 	}
+
+	public static void e(String msg) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		Date current = Calendar.getInstance().getTime();
+		System.out.printf("%s: ERROR %s%n", format.format(current), msg);
+	}
 	
 }

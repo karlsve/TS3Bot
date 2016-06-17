@@ -2,9 +2,9 @@ package de.karlsve.ts3.components;
 
 import de.karlsve.ts3.Log;
 import de.karlsve.ts3.ServerBot;
-import de.karlsve.ts3.ServerBot.ServerBotListener;
+import de.karlsve.ts3.ServerBot.TickListener;
 
-public class KeepAlive implements ServerBotListener {
+public class KeepAlive implements TickListener {
 
 	private static final String COMMAND = "clientupdate";
 

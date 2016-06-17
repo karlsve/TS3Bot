@@ -14,7 +14,7 @@ public class HelpCommand extends PrivateCommand {
 	@Override
 	protected void onTrigger(MessageEvent event) {
 		String message = String.format("List of commands:%n");
-		for (Command command : this.getHandle().getCommandService().getCommands()) {
+		for (Command command : this.getHandle().getCommandManager().getCommands()) {
 			if (command instanceof PrivateCommand) {
 				message += command.getPattern() + "\n";
 			}

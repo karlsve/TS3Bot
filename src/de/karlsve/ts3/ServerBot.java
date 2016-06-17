@@ -2,10 +2,10 @@ package de.karlsve.ts3;
 
 import java.util.Vector;
 
-import de.karlsve.ts3.command.CommandService;
-import de.karlsve.ts3.components.AFKMover;
+import de.karlsve.ts3.command.CommandManager;
 import de.karlsve.ts3.components.KeepAlive;
 import de.karlsve.ts3.events.EventManager;
+import de.karlsve.ts3.plugins.PluginManager;
 import de.karlsve.ts3.settings.ArgumentSettingsFactory;
 import de.karlsve.ts3.settings.Settings;
 import de.stefan1200.jts3serverquery.JTS3ServerQuery;
@@ -15,22 +15,27 @@ public class ServerBot implements Runnable {
 	private Settings settings = null;
 	private JTS3ServerQuery query = null;
 	private EventManager eventManager;
-	private CommandService commandService;
-	
+	private CommandManager commandManager;
+
 	private boolean run = true;
 
-	public interface ServerBotListener {
+	public interface TickListener {
 		public void onTick(ServerBot handle);
 	}
 
-	private Vector<ServerBotListener> listener = new Vector<>();
+	private Vector<TickListener> listener = new Vector<>();
+	private PluginManager pluginManager;
 
-	synchronized public Vector<ServerBotListener> getListener() {
+	public Vector<TickListener> getListener() {
 		return this.listener;
 	}
 
-	public void addListener(ServerBotListener listener) {
+	public void addListener(TickListener listener) {
 		this.getListener().addElement(listener);
+	}
+
+	public void removeListener(TickListener listener) {
+		this.getListener().removeElement(listener);
 	}
 
 	public ServerBot(String[] args) {
@@ -83,10 +88,13 @@ public class ServerBot implements Runnable {
 
 	private void startComponents() {
 		this.eventManager.init();
-		this.commandService = new CommandService(this);
-		if (this.getSettings().containsKey("afk_cid") && this.getSettings().containsKey("afk_passwd")) {
-			new AFKMover(this);
-		}
+		this.commandManager = new CommandManager(this);
+		this.pluginManager = new PluginManager(this);
+		this.pluginManager.load();
+		/**
+		 * if (this.getSettings().containsKey("afk_cid") &&
+		 * this.getSettings().containsKey("afk_passwd")) { new AFKMover(this); }
+		 **/
 		new KeepAlive(this);
 	}
 
@@ -102,8 +110,12 @@ public class ServerBot implements Runnable {
 		return this.eventManager;
 	}
 
-	public CommandService getCommandService() {
-		return this.commandService;
+	public CommandManager getCommandManager() {
+		return this.commandManager;
+	}
+
+	public PluginManager getPluginManager() {
+		return this.pluginManager;
 	}
 
 	@Override
@@ -122,11 +134,13 @@ public class ServerBot implements Runnable {
 				Log.e(e);
 			}
 		}
+		this.pluginManager.unload();
 		this.disconnect();
 	}
 
 	private void tick() {
-		for (ServerBotListener listener : this.getListener()) {
+		Vector<TickListener> listenerCopy = new Vector<>(this.listener);
+		for (TickListener listener : listenerCopy) {
 			listener.onTick(ServerBot.this);
 		}
 	}
@@ -135,17 +149,17 @@ public class ServerBot implements Runnable {
 		new Thread(new ServerBot(args)).start();
 	}
 
-	synchronized public void restart() throws Exception {
+	public void restart() throws Exception {
 		Log.d("ServerBot restarting...");
 		this.disconnect();
-		this.getListener().removeAllElements();
+		this.listener.removeAllElements();
 		this.init();
 	}
-	
-	synchronized private void disconnect() {
+
+	private void disconnect() {
 		Log.d("ServerBot disconnecting...");
-		if(this.getQuery() != null) {
-			if(this.getQuery().isConnected()) {
+		if (this.getQuery() != null) {
+			if (this.getQuery().isConnected()) {
 				this.getQuery().closeTS3Connection();
 			}
 		}
