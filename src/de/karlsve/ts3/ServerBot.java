@@ -3,7 +3,6 @@ package de.karlsve.ts3;
 import java.util.Vector;
 
 import de.karlsve.ts3.command.CommandManager;
-import de.karlsve.ts3.components.KeepAlive;
 import de.karlsve.ts3.events.EventManager;
 import de.karlsve.ts3.plugins.PluginManager;
 import de.karlsve.ts3.settings.ArgumentSettingsFactory;
@@ -95,7 +94,6 @@ public class ServerBot implements Runnable {
 		 * if (this.getSettings().containsKey("afk_cid") &&
 		 * this.getSettings().containsKey("afk_passwd")) { new AFKMover(this); }
 		 **/
-		new KeepAlive(this);
 	}
 
 	public Settings getSettings() {
