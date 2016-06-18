@@ -7,15 +7,18 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Scanner;
 
+import de.karlsve.ts3.Log;
+
 public abstract class FileSettingsFactory {
 
-	public static final String DEFAULT_FILENAME = "bot.ini";
+	public static final String DEFAULT_FILENAME = "config.ini";
 
 	public static Settings readFileSettings(String filename) {
 		File file = new File(filename);
 		Scanner scanner = null;
 		Settings settings = new Settings();
 		if (file.exists()) {
+			Log.d("Settings file found.");
 			try {
 				scanner = new Scanner(file);
 				while (scanner.hasNextLine()) {

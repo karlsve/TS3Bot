@@ -6,6 +6,7 @@ import de.karlsve.ts3.command.CommandManager;
 import de.karlsve.ts3.events.EventManager;
 import de.karlsve.ts3.plugins.PluginManager;
 import de.karlsve.ts3.settings.ArgumentSettingsFactory;
+import de.karlsve.ts3.settings.FileSettingsFactory;
 import de.karlsve.ts3.settings.Settings;
 import de.stefan1200.jts3serverquery.JTS3ServerQuery;
 
@@ -39,6 +40,10 @@ public class ServerBot implements Runnable {
 
 	public ServerBot(String[] args) {
 		this.settings = ArgumentSettingsFactory.readSettings(args);
+		if(this.settings.containsKey("config")) {
+			String filename = this.settings.get("config");
+			this.settings = FileSettingsFactory.readFileSettings(filename);
+		}
 	}
 
 	public void init() {
