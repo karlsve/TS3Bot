@@ -1,13 +1,13 @@
-# TS3Bot
+# TS3Bot #
 TS3 ServerQuery Bot, based on [JTS3ServerQuery Library by Stefan1200](https://www.stefan1200.de/forum/index.php)
 
-TODO:
+## TODO ##
 - Add dynamic system for Events
 - Finish the settings system
 - Add all events
 - (Maybe add WebInterface)
 
-Basic Commands:
+## Basic Commands ##
 Global:
 - ![botname]
 	Calls the bot to your help!
