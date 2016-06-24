@@ -8,10 +8,11 @@ TS3 ServerQuery Bot, based on [JTS3ServerQuery Library by Stefan1200](https://ww
 - (Maybe add WebInterface)
 
 ## Basic Commands ##
-Global:
+### Global: ###
 - ![botname]
 	Calls the bot to your help!
-Private:
+
+### Private: ###
 - ?
 	List of commands (As regex pattern for now)
 - shutdown
@@ -19,7 +20,7 @@ Private:
 - execute
 	Disabled at the moment, have to work out some kind of permissions system
 
-Core Plugins:
+## Core Plugins ##
 - KeepAlive (Sends keep alive to make sure the bot stays connected to the server)
 - AFKMover (Moves people to the afk channel after 10 minutes of inactivity and back when they come back active. Disabled on per user basis by "afk off". Enabled by "afk on")
 - RollTheDice (Only implements the "coin" private command for now)
