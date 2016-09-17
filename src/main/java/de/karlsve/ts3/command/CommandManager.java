@@ -9,7 +9,7 @@ import de.karlsve.ts3.ServerBot;
 public class CommandManager {
 	
 	private ServerBot handle = null;
-	private List<Command> commands = new ArrayList<Command>();
+	private List<Command> commands = new ArrayList<>();
 
 	public CommandManager(ServerBot handle) {
 		this.handle = handle;

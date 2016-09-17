@@ -31,13 +31,6 @@ public class EventManager implements TeamspeakActionListener {
 			this.handle.getQuery().addEventNotify(JTS3ServerQuery.EVENT_MODE_TEXTPRIVATE, 0);
 			this.handle.getQuery().addEventNotify(JTS3ServerQuery.EVENT_MODE_SERVER, 0);
 			this.handle.getQuery().addEventNotify(JTS3ServerQuery.EVENT_MODE_TEXTSERVER, 0);
-			/** TODO Rewrite to proper functioning event listening on every channel
-			for(Map<String, String> channel : this.handle.getQuery().getList(JTS3ServerQuery.LISTMODE_CHANNELLIST)) {
-				int cid = Integer.valueOf(channel.get("cid"));
-				this.handle.getQuery().addEventNotify(JTS3ServerQuery.EVENT_MODE_TEXTCHANNEL, cid);
-				this.handle.getQuery().addEventNotify(JTS3ServerQuery.EVENT_MODE_CHANNEL, cid);
-			}
-			**/
 			Log.d("EventManager running...");
 		} catch (TS3ServerQueryException e) {
 			Log.e(new Exception("EventManager error..."));
@@ -87,15 +80,13 @@ public class EventManager implements TeamspeakActionListener {
 	}
 
 	private void triggerMessageEvent(MessageEvent event) {
-		for(MessageListener listener : this.messageListener) {
-			if(listener.getTargetMode() == event.getTargetMode()) {
-				if(event.isReceived()) {
-					listener.onMessageReceived(event);
-				} else {
-					listener.onMessageSent(event);
-				}
+		this.messageListener.stream().filter(listener -> listener.getTargetMode() == event.getTargetMode()).forEach(listener -> {
+			if (event.isReceived()) {
+				listener.onMessageReceived(event);
+			} else {
+				listener.onMessageSent(event);
 			}
-		}
+		});
 	}
 
 }

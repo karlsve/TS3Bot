@@ -50,7 +50,8 @@ public abstract class FileSettingsFactory {
 			writer = new FileWriter(file);
 			writer.write("");
 			for(Map.Entry<String, String> entry : settings.entrySet()) {
-				writer.append(entry.getKey() + "=" + entry.getValue());
+				String line = entry.getKey() + "=" + entry.getValue();
+				writer.append(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

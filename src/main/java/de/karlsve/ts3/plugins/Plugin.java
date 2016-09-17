@@ -4,7 +4,7 @@ import de.karlsve.ts3.ServerBot;
 
 public interface Plugin {
 	
-	public void onLoad(ServerBot handle);
-	public void onUnload(ServerBot handle);
+	void onLoad(ServerBot handle);
+	void onUnload(ServerBot handle);
 	
 }

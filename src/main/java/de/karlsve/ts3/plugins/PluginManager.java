@@ -26,7 +26,7 @@ public class PluginManager {
 
 	}
 
-	private static Object lock = new Object();
+	private final Object lock = new Object();
 	public static final String DEFAULT_DIRECTORY = "plugins";
 
 	private ServerBot handle = null;
@@ -36,7 +36,7 @@ public class PluginManager {
 	public PluginManager(ServerBot handle) {
 		this.handle = handle;
 		Log.d("PluginManager starting...");
-		synchronized (PluginManager.lock) {
+		synchronized (this.lock) {
 			try {
 				this.plugins.addAll(this.loadPlugins());
 			} catch (IOException e) {
@@ -46,7 +46,7 @@ public class PluginManager {
 	}
 	
 	public Plugin getPlugin(Class<? extends Plugin> clazz) {
-		synchronized(PluginManager.lock) {
+		synchronized(this.lock) {
 			for(Plugin plugin : this.plugins) {
 				if(clazz.isInstance(plugin)) {
 					return plugin;
@@ -57,7 +57,7 @@ public class PluginManager {
 	}
 
 	public void load() {
-		synchronized (PluginManager.lock) {
+		synchronized (this.lock) {
 			Log.d("Loading plugins...");
 			for (Plugin plugin : this.plugins) {
 				plugin.onLoad(this.handle);
@@ -67,7 +67,7 @@ public class PluginManager {
 	}
 
 	public void unload() {
-		synchronized (PluginManager.lock) {
+		synchronized (this.lock) {
 			Log.d("Loading unloading...");
 			for (Plugin plugin : this.plugins) {
 				plugin.onUnload(this.handle);
@@ -77,7 +77,7 @@ public class PluginManager {
 	}
 
 	public void reload() throws IOException {
-		synchronized (PluginManager.lock) {
+		synchronized (this.lock) {
 			this.plugins.clear();
 			this.plugins.addAll(this.loadPlugins());
 		}
@@ -119,7 +119,7 @@ public class PluginManager {
 	}
 
 	private static List<Class<Plugin>> extractClassesFromJARs(File[] jars, ClassLoader cl) throws IOException {
-		List<Class<Plugin>> classes = new ArrayList<Class<Plugin>>();
+		List<Class<Plugin>> classes = new ArrayList<>();
 		for (File jar : jars) {
 			classes.addAll(PluginManager.extractClassesFromJAR(jar, cl));
 		}
@@ -128,9 +128,9 @@ public class PluginManager {
 
 	@SuppressWarnings("unchecked")
 	private static List<Class<Plugin>> extractClassesFromJAR(File jar, ClassLoader cl) throws IOException {
-		List<Class<Plugin>> classes = new ArrayList<Class<Plugin>>();
+		List<Class<Plugin>> classes = new ArrayList<>();
 		JarInputStream jaris = new JarInputStream(new FileInputStream(jar));
-		JarEntry ent = null;
+		JarEntry ent;
 		while ((ent = jaris.getNextJarEntry()) != null) {
 			if (ent.getName().toLowerCase().endsWith(".class")) {
 				try {
@@ -159,7 +159,7 @@ public class PluginManager {
 	}
 
 	private static List<Plugin> instantiatePlugins(List<Class<Plugin>> plugins) {
-		List<Plugin> plugs = new ArrayList<Plugin>(plugins.size());
+		List<Plugin> plugs = new ArrayList<>(plugins.size());
 		for (Class<Plugin> plug : plugins) {
 			try {
 				plugs.add(plug.newInstance());

@@ -17,7 +17,7 @@ public class NameCommand extends GlobalCommand {
 			this.getHandle().getQuery().sendTextMessage(event.getInvokerId(), JTS3ServerQuery.TEXTMESSAGE_TARGET_CLIENT, "How can I help you?");
 		} catch (TS3ServerQueryException e) {
 			e.printStackTrace();
-		};
+		}
 	}
 
 }

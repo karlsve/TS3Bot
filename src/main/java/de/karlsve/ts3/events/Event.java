@@ -38,7 +38,7 @@ public abstract class Event {
 	
 	@Override
 	public String toString() {
-		return String.format("Event::id:%i::", this.id);
+		return String.format("Event::id:%d::", this.id);
 	}
 
 }
