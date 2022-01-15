@@ -23,9 +23,8 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Authenticate
-      run: |
-        gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
     - name: Upload artifact
       run: |
         gh release upload ${{ github.event.release.upload_url }} target/*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
