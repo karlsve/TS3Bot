@@ -23,10 +23,8 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Move artifact
-      run: mkdir staging && cp target/*jar-with-dependencies.jar staging
     - name: Upload artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: Package
-        path: staging
+        path: target/*.jar
