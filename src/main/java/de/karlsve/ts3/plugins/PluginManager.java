@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -162,12 +163,18 @@ public class PluginManager {
 		List<Plugin> plugs = new ArrayList<>(plugins.size());
 		for (Class<Plugin> plug : plugins) {
 			try {
-				plugs.add(plug.newInstance());
+				plugs.add(plug.getDeclaredConstructor().newInstance());
 			} catch (InstantiationException e) {
 				Log.e("Can't instantiate plugin: " + plug.getName());
 				Log.e(e);
 			} catch (IllegalAccessException e) {
 				Log.e("IllegalAccess for plugin: " + plug.getName());
+				Log.e(e);
+			} catch (InvocationTargetException e) {
+				Log.e("Illegal target for plugin: " + plug.getName());
+				Log.e(e);
+			} catch (Exception e) {
+				Log.e("Other issue with plugin: " + plug.getName());
 				Log.e(e);
 			}
 		}

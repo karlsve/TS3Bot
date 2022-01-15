@@ -1,7 +1,10 @@
 package de.karlsve.ts3.events;
 
+import com.github.manevolent.ts3j.api.TextMessageTargetMode;
+import com.github.manevolent.ts3j.event.TextMessageEvent;
+
 public interface MessageListener {
-	int getTargetMode();
-	void onMessageReceived(MessageEvent event);
-	void onMessageSent(MessageEvent event);
+	TextMessageTargetMode getTargetMode();
+	void onMessageReceived(TextMessageEvent event);
+	void onMessageSent(TextMessageEvent event);
 }

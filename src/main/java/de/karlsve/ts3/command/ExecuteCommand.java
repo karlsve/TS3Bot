@@ -1,10 +1,9 @@
 package de.karlsve.ts3.command;
 
-import java.util.Map;
+import com.github.manevolent.ts3j.event.TextMessageEvent;
 
+import de.karlsve.ts3.Log;
 import de.karlsve.ts3.ServerBot;
-import de.karlsve.ts3.events.MessageEvent;
-import de.stefan1200.jts3serverquery.TS3ServerQueryException;
 
 public class ExecuteCommand extends PrivateCommand {
 
@@ -13,15 +12,18 @@ public class ExecuteCommand extends PrivateCommand {
 	}
 
 	@Override
-	protected void onTrigger(MessageEvent event) {
+	public void onTrigger(TextMessageEvent event) {
+		Log.d("Not implemented yet");
+		/*
 		String query = event.getMessage().replaceFirst("^!execute ", "");
-		Map<String, String> response = event.getHandle().getQuery().doCommand(query);
+		Map<String, String> response = this.getHandle().getClient().executeCommand(new SingleCommand);
 		try {
 			event.getHandle().getQuery().sendTextMessage(event.getInvokerId(), MessageEvent.TARGET_MODE_PRIVATE,
 					response.toString());
 		} catch (TS3ServerQueryException e) {
 			e.printStackTrace();
 		}
+		*/
 	}
 
 }

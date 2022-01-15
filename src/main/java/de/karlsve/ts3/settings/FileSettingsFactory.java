@@ -1,6 +1,7 @@
 package de.karlsve.ts3.settings;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -39,6 +40,9 @@ public abstract class FileSettingsFactory {
 					scanner.close();
 				}
 			}
+		} else {
+			FileNotFoundException e = new FileNotFoundException("Settings file not found.");
+			Log.e(e);
 		}
 		return settings;
 	}
