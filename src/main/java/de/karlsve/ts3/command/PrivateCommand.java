@@ -1,7 +1,8 @@
 package de.karlsve.ts3.command;
 
+import com.github.manevolent.ts3j.api.TextMessageTargetMode;
+
 import de.karlsve.ts3.ServerBot;
-import de.karlsve.ts3.events.MessageEvent;
 
 public abstract class PrivateCommand extends Command {
 
@@ -10,8 +11,8 @@ public abstract class PrivateCommand extends Command {
 	}
 
 	@Override
-	public int getTargetMode() {
-		return MessageEvent.TARGET_MODE_PRIVATE;
+	public TextMessageTargetMode getTargetMode() {
+		return TextMessageTargetMode.CLIENT;
 	}
 	
 }

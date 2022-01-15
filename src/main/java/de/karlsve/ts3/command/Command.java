@@ -1,20 +1,22 @@
 package de.karlsve.ts3.command;
 
-import de.karlsve.ts3.ServerBot;
-import de.karlsve.ts3.events.MessageEvent;
-import de.karlsve.ts3.events.MessageListener;
+import java.util.regex.Pattern;
 
-public abstract class Command implements MessageListener {
+import com.github.manevolent.ts3j.event.TextMessageEvent;
+
+import de.karlsve.ts3.ServerBot;
+
+public abstract class Command implements ICommand {
 	
-	private String pattern = "";
+	private Pattern pattern = Pattern.compile("");
 	private ServerBot handle = null;
-	
+
 	public Command(ServerBot handle, String pattern) {
 		this.handle = handle;
-		this.pattern = pattern;
+		this.pattern = Pattern.compile("^" + pattern + "$");
 	}
 	
-	public String getPattern() {
+	public Pattern getPattern() {
 		return this.pattern;
 	}
 	
@@ -23,16 +25,16 @@ public abstract class Command implements MessageListener {
 	}
 
 	@Override
-	public void onMessageReceived(MessageEvent event) {
-		if (event.getMessage().matches(this.getPattern())) {
+	public void onMessageReceived(TextMessageEvent event) {
+		if (this.getPattern().matcher(event.getMessage()).matches()) {
 			this.onTrigger(event);
 		}
 	}
 
 	@Override
-	public void onMessageSent(MessageEvent event) {
+	public void onMessageSent(TextMessageEvent event) {
 	}
 
-	protected abstract void onTrigger(MessageEvent event);
+	public abstract void onTrigger(TextMessageEvent event);
 
 }

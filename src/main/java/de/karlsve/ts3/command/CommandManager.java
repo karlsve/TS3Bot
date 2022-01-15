@@ -2,6 +2,7 @@ package de.karlsve.ts3.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.karlsve.ts3.Log;
 import de.karlsve.ts3.ServerBot;
@@ -9,14 +10,14 @@ import de.karlsve.ts3.ServerBot;
 public class CommandManager {
 	
 	private ServerBot handle = null;
-	private List<Command> commands = new ArrayList<>();
+	private List<ICommand> commands = new ArrayList<>();
 
 	public CommandManager(ServerBot handle) {
 		this.handle = handle;
 		this.init();
 	}
 	
-	public List<Command> getCommands() {
+	public List<ICommand> getCommands() {
 		return this.commands;
 	}
 
@@ -27,20 +28,29 @@ public class CommandManager {
 	}
 
 	private void initCommands() {
-		this.registerCommand(new NameCommand(this.handle));
-		this.registerCommand(new HelpCommand(this.handle));
+		this.registerCommand(NameCommand.class);
+		this.registerCommand(HelpCommand.class);
 		//this.registerCommand(new ExecuteCommand(this.handle));
-		//this.registerCommand(new ShutdownCommand(this.handle));
+		this.registerCommand(ShutdownCommand.class);
 	}
 
-	public void registerCommand(Command command) {
-		this.handle.getEventManager().addMessageListener(command);
-		this.getCommands().add(command);
+	public <T extends ICommand> void registerCommand(Class<T> command) {
+		try {
+			ICommand inst = command.getDeclaredConstructor(ServerBot.class).newInstance(this.handle);
+			this.handle.getEventManager().addMessageListener(inst);
+			this.getCommands().add(inst);
+		} catch (Exception e) {
+			Log.d("Failed to register command: " + command.getName());
+			Log.e(e);
+			e.printStackTrace();
+		}
 	}
 
-	public void unregisterCommand(Command command) {
-		this.handle.getEventManager().removeMessageListener(command);
-		this.getCommands().remove(command);
+	public <T extends Command> void unregisterCommand(Class<T> command) {
+		this.getCommands().stream().filter(c -> command.isInstance(c)).collect(Collectors.toList()).forEach(c -> {
+			this.handle.getEventManager().removeMessageListener(c);
+			this.getCommands().remove(c);
+		});
 	}
 
 }

@@ -2,20 +2,28 @@ package de.karlsve.ts3;
 
 import java.util.Vector;
 
+import com.github.manevolent.ts3j.identity.Identity;
+import com.github.manevolent.ts3j.identity.LocalIdentity;
+import com.github.manevolent.ts3j.protocol.socket.client.LocalTeamspeakClientSocket;
+
 import de.karlsve.ts3.command.CommandManager;
 import de.karlsve.ts3.events.EventManager;
 import de.karlsve.ts3.plugins.PluginManager;
 import de.karlsve.ts3.settings.ArgumentSettingsFactory;
 import de.karlsve.ts3.settings.FileSettingsFactory;
 import de.karlsve.ts3.settings.Settings;
-import de.stefan1200.jts3serverquery.JTS3ServerQuery;
 
 public class ServerBot implements Runnable {
 
     private Settings settings = null;
-    private JTS3ServerQuery query = null;
     private EventManager eventManager;
+    private Identity identity;
+    private LocalTeamspeakClientSocket handle;
     private CommandManager commandManager;
+
+    public LocalTeamspeakClientSocket getClient() {
+        return this.handle;
+    }
 
     private boolean run = true;
 
@@ -42,56 +50,44 @@ public class ServerBot implements Runnable {
         this.settings = ArgumentSettingsFactory.readSettings(args);
         if (this.settings.containsKey("config")) {
             String filename = this.settings.get("config");
+            Log.d(filename);
             this.settings = FileSettingsFactory.readFileSettings(filename);
         }
     }
 
     public void init() {
         Log.d("ServerBot starting...");
-        this.query = new JTS3ServerQuery();
-        this.eventManager = new EventManager(this);
+        this.handle = new LocalTeamspeakClientSocket();
+        this.eventManager = new EventManager(this.handle);
         try {
+            this.identity = LocalIdentity.generateNew(10);
+            this.handle.setIdentity(identity);
+            this.handle.addListener(this.eventManager);
+            this.handle.setNickname(this.settings.get("name", "ServerBot"));
             this.connect();
-            this.login();
-            this.selectServer();
-            this.query.setDisplayName(this.settings.get("name"));
             this.startComponents();
             Log.d("ServerBot running...");
         } catch (Exception e) {
             Log.e(new Exception("ServerBot error during start..."));
             Log.e(e);
+            this.shutdown();
         }
     }
 
     synchronized private void connect() throws Exception {
-        if (this.settings.containsKey("ip") && this.settings.containsKey("port")) {
+        if (this.settings.containsKey("addr")) {
             Log.d("ServerBot connecting...");
-            this.query.connectTS3Query(this.settings.get("ip"), Integer.valueOf(this.settings.get("port")));
+            this.handle.connect(
+                this.settings.get("addr"),
+                this.settings.get("password", null),
+                Long.valueOf(this.settings.get("timeout", "1000"))
+            );
             return;
         }
         throw new Exception("IP and/or Port missing...");
     }
 
-    synchronized public void login() throws Exception {
-        if (this.settings.containsKey("username") && this.settings.containsKey("password")) {
-            Log.d("ServerBot logging in...");
-            this.query.loginTS3(this.settings.get("username"), this.settings.get("password"));
-            return;
-        }
-        throw new Exception("Username and/or password missing...");
-    }
-
-    private void selectServer() throws Exception {
-        if (this.settings.containsKey("sid")) {
-            Log.d("ServerBot selecting server...");
-            this.query.selectVirtualServer(Integer.valueOf(this.settings.get("sid")));
-            return;
-        }
-        throw new Exception("Server ID missing...");
-    }
-
     private void startComponents() {
-        this.eventManager.init();
         this.commandManager = new CommandManager(this);
         this.pluginManager = new PluginManager(this);
         this.pluginManager.load();
@@ -99,10 +95,6 @@ public class ServerBot implements Runnable {
 
     public Settings getSettings() {
         return this.settings;
-    }
-
-    public JTS3ServerQuery getQuery() {
-        return this.query;
     }
 
     public EventManager getEventManager() {
@@ -127,7 +119,9 @@ public class ServerBot implements Runnable {
                 Log.e(e);
             }
         }
-        this.pluginManager.unload();
+        if(this.pluginManager != null) {
+            this.pluginManager.unload();
+        }
         this.disconnect();
     }
 
@@ -151,9 +145,14 @@ public class ServerBot implements Runnable {
 
     private void disconnect() {
         Log.d("ServerBot disconnecting...");
-        if (this.getQuery() != null) {
-            if (this.getQuery().isConnected()) {
-                this.getQuery().closeTS3Connection();
+        if (this.handle != null) {
+            try {
+                if (this.handle.isConnected()) {
+                    this.handle.disconnect();
+                }
+                this.handle.close();
+            } catch (Exception e) {
+                Log.e(e);
             }
         }
     }
