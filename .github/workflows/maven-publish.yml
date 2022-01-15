@@ -27,6 +27,6 @@ jobs:
       run: mkdir staging && cp target/*jar-with-dependencies.jar staging
     - name: Upload artifact
       uses: actions/upload-artifact@v1
-          with:
-            name: Package
-            path: staging
+      with:
+        name: Package
+        path: staging
