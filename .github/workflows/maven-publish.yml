@@ -24,7 +24,5 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Upload artifact
-      uses: AButler/upload-release-assets@v2.0
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        files: target/*.jar
+      run: |
+        gh release upload ${{ github.event.release.upload_url }} target/*.jar
