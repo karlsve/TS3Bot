@@ -28,7 +28,6 @@ public class EventManager {
 	}
 
 	public <T extends Event> void trigger(T event) {
-		Log.d("Event triggered: ", event);
 		this.listeners.forEach(l -> {
 			if(l instanceof MatchingEventListener && !((MatchingEventListener<?>) l).matches(event)) {
 				return;

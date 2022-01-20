@@ -5,8 +5,9 @@ import de.karlsve.ts3.command.PrivateCommand;
 
 public class CoinCommand extends PrivateCommand {
 
-    public CoinCommand() {
-        super("\\!coin");
+    @Override
+    public String getPattern() {
+        return "^\\!coin$";
     }
 
     @Override

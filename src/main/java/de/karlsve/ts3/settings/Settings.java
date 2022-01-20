@@ -1,8 +1,8 @@
 package de.karlsve.ts3.settings;
 
-import java.util.HashMap;
+import de.karlsve.ts3.api.DynamicMap;
 
-public class Settings extends HashMap<String, String> {
+public class Settings extends DynamicMap<String> {
 	/**
 	 * 
 	 */
@@ -20,8 +20,12 @@ public class Settings extends HashMap<String, String> {
 		super();
 	}
 
-	public String get(String key, String defaultValue) {
-		return this.getOrDefault(key, defaultValue);
+	public <T> T get(String key, T defaultValue) {
+		return (T) this.getOrDefault(key, defaultValue);
+	}
+
+	public <T> T get(String key) {
+		return (T) super.get(key);
 	}
 	
 }

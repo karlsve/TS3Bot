@@ -80,7 +80,7 @@ public class ServerBot implements Runnable {
         try {
             CommandManager.getInstance();
             PluginManager.getInstance().load();
-            boolean useQuery = Settings.getInstance().get("query", "true").equals("true");
+            boolean useQuery = Settings.getInstance().get("query", true);
             this.client = useQuery ? new ServerQueryClient() : new IdentityClient();
             this.client.connect();
             this.scheduler.scheduleAtFixedRate(this.ticker, 0, 1, java.util.concurrent.TimeUnit.SECONDS);

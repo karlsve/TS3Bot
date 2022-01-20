@@ -1,5 +1,8 @@
 package de.karlsve.ts3.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.TS3Config;
 import com.github.theholywaffle.teamspeak3.TS3Query;
@@ -16,7 +19,9 @@ import com.github.theholywaffle.teamspeak3.api.event.PrivilegeKeyUsedEvent;
 import com.github.theholywaffle.teamspeak3.api.event.ServerEditedEvent;
 import com.github.theholywaffle.teamspeak3.api.event.TS3Listener;
 import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
+import com.github.theholywaffle.teamspeak3.api.wrapper.ClientInfo;
 
+import de.karlsve.ts3.api.DynamicMap;
 import de.karlsve.ts3.events.ChannelMessageEvent;
 import de.karlsve.ts3.events.EventManager;
 import de.karlsve.ts3.events.PrivateMessageEvent;
@@ -32,12 +37,12 @@ public class ServerQueryClient implements Client, TS3Listener {
     public ServerQueryClient() {
         this.config = new TS3Config();
         this.config.setHost(Settings.getInstance().get("host", "localhost"));
-        this.config.setQueryPort(Integer.parseInt(Settings.getInstance().get("port", "10011")));
+        this.config.setQueryPort(Settings.getInstance().get("port", 10011));
         this.query = new TS3Query();
     }
 
     @Override
-    public boolean connect() {
+    public void connect() {
         this.query.connect();
         this.api = this.query.getApi();
         this.api.addTS3Listeners(this);
@@ -48,7 +53,6 @@ public class ServerQueryClient implements Client, TS3Listener {
             this.api.setNickname(nickname);
         }
         this.api.registerAllEvents();
-        return true;
     }
 
     @Override
@@ -58,21 +62,24 @@ public class ServerQueryClient implements Client, TS3Listener {
     }
 
     @Override
-    public boolean sendPrivateMessage(int receiverId, String message) {
-        // TODO Auto-generated method stub
-        return false;
+    public void sendPrivateMessage(int receiverId, String message) {
+        this.api.sendPrivateMessage(receiverId, message);
     }
 
     @Override
-    public boolean joinChannel(int receiverId, String password) {
-        // TODO Auto-generated method stub
-        return false;
+    public void joinChannel(int receiverId, String password) {
+        this.api.moveClient(this.api.whoAmI().getId(), receiverId, password);
     }
 
     @Override
-    public Object clientInfo(int clientId) {
-        // TODO Auto-generated method stub
-        return null;
+    public DynamicMap<String> clientInfo(int clientId) {
+        DynamicMap<String> info = new DynamicMap<>();
+        ClientInfo cinfo = this.api.getClientInfo(clientId);
+        info.put("id", cinfo.getId());
+        info.put("channel_id", cinfo.getChannelId());
+        info.put("away_message", cinfo.getAwayMessage());
+        info.put("nickname", cinfo.getNickname());
+        return info;
     }
 
     @Override
@@ -154,6 +161,11 @@ public class ServerQueryClient implements Client, TS3Listener {
                 EventManager.getInstance().trigger(new ServerMessageEvent(evt.getInvokerId(), evt.getMessage(), this));
                 break;
         }
+    }
+
+    @Override
+    public void sendServerMessage(String message) {
+        this.api.sendServerMessage(message);
     }
     
 }

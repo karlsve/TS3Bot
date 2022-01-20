@@ -27,9 +27,9 @@ public abstract class FileSettingsFactory {
 					if (line.contains("=") && !line.startsWith("#")) {
 						String[] pair = line.split("=");
 						if (pair.length == 1) {
-							settings.put(pair[0], "");
+							settings.put(pair[0], null);
 						} else {
-							settings.put(pair[0], pair[1]);
+							settings.put(pair[0], FileSettingsFactory.parseValue(pair[1]));
 						}
 					}
 				}
@@ -46,6 +46,20 @@ public abstract class FileSettingsFactory {
 		}
 		return settings;
 	}
+
+	private static Object parseValue(String value) {
+		try {
+			return Integer.parseInt(value);
+		} catch(NumberFormatException e) {
+			Log.d("No integer", value);
+		}
+		if(value.equals("true")) {
+			return true;
+		} else if(value.equals("false")) {
+			return false;
+		}
+		return value;
+	}
 	
 	public static void writeFileSettings(String filename, Settings settings) {
 		File file = new File(filename);
@@ -53,7 +67,7 @@ public abstract class FileSettingsFactory {
 		try {
 			writer = new FileWriter(file);
 			writer.write("");
-			for(Map.Entry<String, String> entry : settings.entrySet()) {
+			for(Map.Entry<String, Object> entry : settings.entrySet()) {
 				String line = entry.getKey() + "=" + entry.getValue();
 				writer.append(line);
 			}

@@ -9,6 +9,8 @@ import de.karlsve.ts3.events.EventManager;
 import de.karlsve.ts3.events.MessageListener;
 import de.karlsve.ts3.events.PrivateMessageEvent;
 import de.karlsve.ts3.events.PrivateMessageListener;
+import de.karlsve.ts3.events.ServerMessageEvent;
+import de.karlsve.ts3.events.ServerMessageListener;
 
 public class CommandManager {
 	
@@ -42,16 +44,29 @@ public class CommandManager {
 	}
 
 	public void addCommand(Command<?> command) {
+		MessageListener<?> listener;
 		if (command instanceof PrivateCommand) {
-			EventManager.getInstance().addListener(new PrivateMessageListener() {
+			listener = new PrivateMessageListener() {
 				@Override
 				public void onEvent(PrivateMessageEvent event) {
 					if (event.message.matches(command.getPattern())) {
 						((PrivateCommand) command).onCommand(event);
 					}
 				}
-			});
+			};
+		} else if(command instanceof ServerCommand) {
+			listener = new ServerMessageListener() {
+				@Override
+				public void onEvent(ServerMessageEvent event) {
+					if (event.message.matches(command.getPattern())) {
+						((ServerCommand) command).onCommand(event);
+					}
+				}
+			};
+		} else {
+			throw new IllegalArgumentException("Command must be either PrivateCommand or ServerCommand");
 		}
+		EventManager.getInstance().addListener(listener);
 	}
 
 	public void removeCommand(Command<?> command) {
