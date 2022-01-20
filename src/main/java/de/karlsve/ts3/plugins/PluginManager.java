@@ -15,7 +15,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import de.karlsve.ts3.Log;
-import de.karlsve.ts3.ServerBot;
+import de.karlsve.ts3.settings.Settings;
 
 public class PluginManager {
 
@@ -27,15 +27,22 @@ public class PluginManager {
 
 	}
 
+	private static PluginManager instance = null;
+
+	public static PluginManager getInstance() {
+		if (instance == null) {
+			instance = new PluginManager();
+		}
+		return instance;
+	}
+
 	private final Object lock = new Object();
 	public static final String DEFAULT_DIRECTORY = "plugins";
 
-	private ServerBot handle = null;
 	private Vector<Plugin> plugins = new Vector<>();
 	private String directory = PluginManager.DEFAULT_DIRECTORY;
 
-	public PluginManager(ServerBot handle) {
-		this.handle = handle;
+	private PluginManager() {
 		Log.d("PluginManager starting...");
 		synchronized (this.lock) {
 			try {
@@ -61,7 +68,7 @@ public class PluginManager {
 		synchronized (this.lock) {
 			Log.d("Loading plugins...");
 			for (Plugin plugin : this.plugins) {
-				plugin.onLoad(this.handle);
+				plugin.onLoad();
 				Log.d("Plugin loaded: " + plugin.toString());
 			}
 		}
@@ -71,7 +78,7 @@ public class PluginManager {
 		synchronized (this.lock) {
 			Log.d("Loading unloading...");
 			for (Plugin plugin : this.plugins) {
-				plugin.onUnload(this.handle);
+				plugin.onUnload();
 				Log.d("Plugin unloaded: " + plugin.toString());
 			}
 		}
@@ -84,13 +91,6 @@ public class PluginManager {
 		}
 	}
 
-	private String loadPluginDirectory() {
-		if (this.handle.getSettings().containsKey("plugin_directory")) {
-			return this.handle.getSettings().get("plugin_directory");
-		}
-		return PluginManager.DEFAULT_DIRECTORY;
-	}
-
 	private void initPluginDirectory() {
 		File dir = new File(this.directory);
 		if (!dir.exists()) {
@@ -99,7 +99,7 @@ public class PluginManager {
 	}
 
 	private List<Plugin> loadPlugins() throws IOException {
-		this.directory = this.loadPluginDirectory();
+		this.directory = Settings.getInstance().get("plugin_directory", PluginManager.DEFAULT_DIRECTORY);
 		this.initPluginDirectory();
 		this.plugins.clear();
 		File[] files = new File(this.directory).listFiles(new JARFileFilter());

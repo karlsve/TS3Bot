@@ -17,7 +17,7 @@ public abstract class FileSettingsFactory {
 	public static Settings readFileSettings(String filename) {
 		File file = new File(filename);
 		Scanner scanner = null;
-		Settings settings = new Settings();
+		Settings settings = Settings.getInstance();
 		if (file.exists()) {
 			Log.d("Settings file found.");
 			try {

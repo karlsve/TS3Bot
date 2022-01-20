@@ -10,14 +10,21 @@ import de.karlsve.ts3.plugin.coin.CoinCommand;
  */
 public class Coin implements Plugin {
 
-    @Override
-    public void onLoad(ServerBot handle) {
-        handle.getCommandManager().registerCommand(CoinCommand.class);
+    private final CoinCommand privateCommand;
+
+    public Coin() {
+        this.privateCommand = new CoinCommand();
     }
 
     @Override
-    public void onUnload(ServerBot handle) {
-        handle.getCommandManager().unregisterCommand(CoinCommand.class);
+    public void onLoad() {
+
+        CommandManager.getInstance().addCommand(this.privateCommand);
+    }
+
+    @Override
+    public void onUnload() {
+        CommandManager.getInstance().removeCommand(this.privateCommand);
     }
 
 }

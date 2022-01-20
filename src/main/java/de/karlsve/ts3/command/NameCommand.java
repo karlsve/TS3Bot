@@ -1,22 +1,22 @@
 package de.karlsve.ts3.command;
 
-import com.github.manevolent.ts3j.event.TextMessageEvent;
+import de.karlsve.ts3.events.ServerMessageEvent;
+import de.karlsve.ts3.settings.Settings;
 
-import de.karlsve.ts3.ServerBot;
+public class NameCommand extends ServerCommand {
 
-public class NameCommand extends GlobalCommand {
-	
-	public NameCommand(ServerBot handle) {
-		super(handle, "!"+handle.getClient().getNickname());
+	public String getPattern() {
+		return Settings.getInstance().get("name");
 	}
 
 	@Override
-	public void onTrigger(TextMessageEvent event) {
+	public void onCommand(ServerMessageEvent event) {
 		try {
-			this.getHandle().getClient().sendPrivateMessage(event.getInvokerId(), "How can I help you?");
+			event.client.sendPrivateMessage(event.invokerId, "How can I help you?");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 }
