@@ -8,7 +8,6 @@ import java.util.concurrent.TimeoutException;
 import com.github.manevolent.ts3j.command.CommandException;
 import com.github.manevolent.ts3j.event.TS3Listener;
 import com.github.manevolent.ts3j.event.TextMessageEvent;
-import com.github.manevolent.ts3j.identity.Identity;
 import com.github.manevolent.ts3j.identity.LocalIdentity;
 import com.github.manevolent.ts3j.protocol.socket.client.LocalTeamspeakClientSocket;
 
