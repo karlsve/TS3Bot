@@ -27,6 +27,7 @@ public class IdentityClient implements Client, TS3Listener {
 
     public IdentityClient(File file) throws IOException, GeneralSecurityException {
         this(file.exists() ? LocalIdentity.read(file) : LocalIdentity.generateNew(10));
+        ((LocalIdentity) this.identity).save(file);
     }
 
     public IdentityClient() throws GeneralSecurityException, IOException {

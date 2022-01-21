@@ -14,7 +14,7 @@ import de.karlsve.ts3.settings.ArgumentSettingsFactory;
 import de.karlsve.ts3.settings.FileSettingsFactory;
 import de.karlsve.ts3.settings.Settings;
 
-public class ServerBot implements Runnable {
+public class ServerBot {
 
     class TickEvent extends Event {
 
@@ -128,7 +128,7 @@ public class ServerBot implements Runnable {
 
     public void shutdown() {
         Log.d("ServerBot stopping...");
-        this.scheduler.shutdown();
+        this.scheduler.shutdownNow();
     }
 
 }

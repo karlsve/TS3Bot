@@ -23,7 +23,7 @@ public class CommandManager {
 		return CommandManager.instance;
 	}
 
-	private HashMap<Command<?>, MessageListener<?>> commands;
+	private final HashMap<Command<?>, MessageListener<?>> commands = new HashMap<>();
 
 	private CommandManager() {
 		Log.d("CommandService starting...");
@@ -70,7 +70,7 @@ public class CommandManager {
 	}
 
 	public void removeCommand(Command<?> command) {
-		if(this.commands.containsKey(command)) {
+		if(command != null && this.commands.containsKey(command)) {
 			EventManager.getInstance().removeListener(this.commands.get(command));
 		}
 	}
