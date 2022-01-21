@@ -22,23 +22,19 @@ import de.karlsve.ts3.settings.Settings;
 
 public class IdentityClient implements Client, TS3Listener {
 
-    public final Identity identity;
+    public final LocalIdentity identity;
     public final LocalTeamspeakClientSocket handle;
 
     public IdentityClient(File file) throws IOException, GeneralSecurityException {
         this(file.exists() ? LocalIdentity.read(file) : LocalIdentity.generateNew(10));
-        ((LocalIdentity) this.identity).save(file);
+        Log.d("Loaded identity from " + file.getAbsolutePath());
     }
 
     public IdentityClient() throws GeneralSecurityException, IOException {
         this(new File(Settings.getInstance().get("identity_file", ".identity")));
     }
 
-    public IdentityClient(int securityLevel) throws GeneralSecurityException {
-        this(LocalIdentity.generateNew(securityLevel));
-    }
-
-    public IdentityClient(Identity identity) {
+    private IdentityClient(LocalIdentity identity) {
         this.identity = identity;
         this.handle = new LocalTeamspeakClientSocket();
         this.handle.setIdentity(identity);
@@ -57,6 +53,7 @@ public class IdentityClient implements Client, TS3Listener {
     public void disconnect() {
         if(this.handle.isConnected()) {
             try {
+                ((LocalIdentity) this.identity).save(new File(Settings.getInstance().get("identity_file", ".identity")));
                 this.handle.disconnect();
                 this.handle.close();
             } catch(Exception e) {

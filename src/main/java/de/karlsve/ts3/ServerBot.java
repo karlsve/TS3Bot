@@ -56,7 +56,6 @@ public class ServerBot {
         this.settings = ArgumentSettingsFactory.readSettings(args);
         if (this.settings.containsKey("config")) {
             String filename = this.settings.get("config");
-            Log.d(filename);
             this.settings = FileSettingsFactory.readFileSettings(filename);
         }
     }
