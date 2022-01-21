@@ -1,8 +1,5 @@
 package de.karlsve.ts3.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.TS3Config;
 import com.github.theholywaffle.teamspeak3.TS3Query;
@@ -83,67 +80,67 @@ public class ServerQueryClient implements Client, TS3Listener {
     }
 
     @Override
-    public void onChannelCreate(ChannelCreateEvent arg0) {
+    public void onChannelCreate(ChannelCreateEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onChannelDeleted(ChannelDeletedEvent arg0) {
+    public void onChannelDeleted(ChannelDeletedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onChannelDescriptionChanged(ChannelDescriptionEditedEvent arg0) {
+    public void onChannelDescriptionChanged(ChannelDescriptionEditedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onChannelEdit(ChannelEditedEvent arg0) {
+    public void onChannelEdit(ChannelEditedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onChannelMoved(ChannelMovedEvent arg0) {
+    public void onChannelMoved(ChannelMovedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onChannelPasswordChanged(ChannelPasswordChangedEvent arg0) {
+    public void onChannelPasswordChanged(ChannelPasswordChangedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onClientJoin(ClientJoinEvent arg0) {
+    public void onClientJoin(ClientJoinEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onClientLeave(ClientLeaveEvent arg0) {
+    public void onClientLeave(ClientLeaveEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onClientMoved(ClientMovedEvent arg0) {
+    public void onClientMoved(ClientMovedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onPrivilegeKeyUsed(PrivilegeKeyUsedEvent arg0) {
+    public void onPrivilegeKeyUsed(PrivilegeKeyUsedEvent evt) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onServerEdit(ServerEditedEvent arg0) {
+    public void onServerEdit(ServerEditedEvent evt) {
         // TODO Auto-generated method stub
         
     }

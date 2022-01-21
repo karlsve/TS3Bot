@@ -19,13 +19,5 @@ public class Settings extends DynamicMap<String> {
 	private Settings() {
 		super();
 	}
-
-	public <T> T get(String key, T defaultValue) {
-		return (T) this.getOrDefault(key, defaultValue);
-	}
-
-	public <T> T get(String key) {
-		return (T) super.get(key);
-	}
 	
 }

@@ -2,8 +2,6 @@ package de.karlsve.ts3.events;
 
 import java.util.Vector;
 
-import de.karlsve.ts3.Log;
-
 public class EventManager {
 
 	private static EventManager instance = null;
@@ -27,6 +25,7 @@ public class EventManager {
 		this.listeners.remove(listener);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Event> void trigger(T event) {
 		this.listeners.forEach(l -> {
 			if(l instanceof MatchingEventListener && !((MatchingEventListener<?>) l).matches(event)) {
