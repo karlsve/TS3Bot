@@ -51,7 +51,6 @@ public abstract class FileSettingsFactory {
 		try {
 			return Integer.parseInt(value);
 		} catch(NumberFormatException e) {
-			Log.d("No integer", value);
 		}
 		if(value.equals("true")) {
 			return true;
