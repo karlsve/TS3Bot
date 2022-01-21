@@ -2,6 +2,7 @@ package de.karlsve.ts3.plugin.coin;
 
 import de.karlsve.ts3.plugins.Plugin;
 import de.karlsve.ts3.ServerBot;
+import de.karlsve.ts3.command.CommandManager;
 import de.karlsve.ts3.plugin.coin.CoinCommand;
 
 /**
@@ -10,14 +11,24 @@ import de.karlsve.ts3.plugin.coin.CoinCommand;
  */
 public class Coin implements Plugin {
 
-    @Override
-    public void onLoad(ServerBot handle) {
-        handle.getCommandManager().registerCommand(CoinCommand.class);
+    private final CoinCommand privateCommand;
+    private final ServerCoinCommand serverCommand;
+
+    public Coin() {
+        this.privateCommand = new CoinCommand();
+        this.serverCommand = new ServerCoinCommand();
     }
 
     @Override
-    public void onUnload(ServerBot handle) {
-        handle.getCommandManager().unregisterCommand(CoinCommand.class);
+    public void onLoad() {
+        CommandManager.getInstance().addCommand(this.privateCommand);
+        CommandManager.getInstance().addCommand(this.serverCommand);
+    }
+
+    @Override
+    public void onUnload() {
+        CommandManager.getInstance().removeCommand(this.privateCommand);
+        CommandManager.getInstance().removeCommand(this.serverCommand);
     }
 
 }

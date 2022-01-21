@@ -1,18 +1,17 @@
 package de.karlsve.ts3.command;
 
-import com.github.manevolent.ts3j.event.TextMessageEvent;
-
 import de.karlsve.ts3.Log;
-import de.karlsve.ts3.ServerBot;
+import de.karlsve.ts3.events.PrivateMessageEvent;
 
 public class ExecuteCommand extends PrivateCommand {
 
-	public ExecuteCommand(ServerBot handle) {
-		super(handle, "^!execute .*?$");
+	@Override
+	public String getPattern() {
+		return "^!execute .*?$";
 	}
 
 	@Override
-	public void onTrigger(TextMessageEvent event) {
+	public void onCommand(PrivateMessageEvent event) {
 		Log.d("Not implemented yet");
 		/*
 		String query = event.getMessage().replaceFirst("^!execute ", "");

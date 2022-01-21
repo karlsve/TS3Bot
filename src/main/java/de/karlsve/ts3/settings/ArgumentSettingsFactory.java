@@ -3,7 +3,7 @@ package de.karlsve.ts3.settings;
 public abstract class ArgumentSettingsFactory {
 
 	public static Settings readSettings(String[] args) {
-		Settings settings = new Settings();
+		Settings settings = Settings.getInstance();
 		for (String arg : args) {
 			if (arg.contains("=")) {
 				String[] split = arg.split("=");

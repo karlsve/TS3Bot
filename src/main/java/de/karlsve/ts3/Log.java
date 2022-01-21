@@ -7,10 +7,12 @@ import java.util.Date;
 
 public abstract class Log {
 	
-	public static void d(Object object) {
+	public static void d(Object ...args) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		Date current = Calendar.getInstance().getTime();
-		System.out.printf("%s: DEBUG %s%n", format.format(current), object);
+		for (Object arg : args) {
+			System.out.printf("%s: DEBUG %s%n", format.format(current), arg);
+		}
 	}
 
 	public static void e(Exception e) {

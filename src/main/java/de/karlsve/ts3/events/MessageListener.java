@@ -1,10 +1,11 @@
 package de.karlsve.ts3.events;
 
-import com.github.manevolent.ts3j.api.TextMessageTargetMode;
-import com.github.manevolent.ts3j.event.TextMessageEvent;
+import de.karlsve.ts3.Log;
 
-public interface MessageListener {
-	TextMessageTargetMode getTargetMode();
-	void onMessageReceived(TextMessageEvent event);
-	void onMessageSent(TextMessageEvent event);
+public abstract class MessageListener<T extends MessageEvent> implements MatchingEventListener<T> {
+	@Override
+	public boolean matches(Event event) {
+		Log.d("matching", event);
+		return event instanceof MessageEvent;
+	}
 }
